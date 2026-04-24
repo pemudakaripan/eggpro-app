@@ -1,5 +1,6 @@
-kirimin 78
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
 
-oo 83
-
-kulak 78
+export default defineConfig({
+  plugins: [react()],
+})
