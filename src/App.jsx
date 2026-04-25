@@ -18,12 +18,12 @@ import {
 // 1. TEMPELKAN KUNCI FIREBASE BARU ANDA DI SINI NANTI
 // ==========================================================
 const firebaseConfig = {
-  apiKey: "KUNCI_BARU_ANDA",
-  authDomain: "PROJECT_BARU.firebaseapp.com",
-  projectId: "PROJECT_BARU",
-  storageBucket: "PROJECT_BARU.firebasestorage.app",
-  messagingSenderId: "NOMOR_SENDER",
-  appId: "ID_APP_ANDA"
+  apiKey: "AIzaSyAE56Dv0Grlj99Kk3kgYMwAC4mM9O-RgbU",
+  authDomain: "eggpro-app-1.firebaseapp.com",
+  projectId: "eggpro-app-1",
+  storageBucket: "eggpro-app-1.firebasestorage.app",
+  messagingSenderId: "607351985753",
+  appId: "1:607351985753:web:2493bca66bc590dfef0348"
 };
 
 // Inisialisasi Firebase
