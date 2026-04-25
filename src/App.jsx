@@ -20,16 +20,7 @@ import {
 // --- INITIALIZE FIREBASE ---
 // ============================================================================
 
-// [VERSI CANVAS - WAJIB AKTIF DI SINI AGAR PREVIEW BERJALAN]
-const firebaseConfig = JSON.parse(__firebase_config);
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
-const appId = typeof __app_id !== 'undefined' ? __app_id : 'egg-pro-app';
-
-/*
-// [VERSI FIX LOKAL - BUKA KOMENTAR DI BAWAH JIKA DIJALANKAN DI VS CODE / HOSTING SENDIRI]
-const firebaseConfigLocal = {
+const firebaseConfig = {
   apiKey: "AIzaSyALPl6gzZDh_p1kxURiLAum2Aygg2_mL9o",
   authDomain: "eggpro-ternak.firebaseapp.com",
   projectId: "eggpro-ternak",
@@ -38,54 +29,16 @@ const firebaseConfigLocal = {
   appId: "1:844870453044:web:ceda181085587bb6830761"
 };
 
-const app = initializeApp(firebaseConfigLocal);
+const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 const appId = 'egg-pro-app';
-*/
-
 
 // ============================================================================
 // --- GEMINI API HELPER ---
 // ============================================================================
 
-// [VERSI CANVAS - WAJIB AKTIF DI SINI AGAR PREVIEW BERJALAN]
 const fetchGeminiAI = async (prompt, systemInstruction) => {
-  const apiKey = ""; // Kunci API disediakan secara otomatis oleh sistem saat runtime
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
-  
-  const payload = {
-    contents: [{ parts: [{ text: prompt }] }],
-    systemInstruction: { parts: [{ text: systemInstruction }] }
-  };
-
-  // Implementasi Exponential Backoff untuk keandalan API di Canvas
-  let retries = 5;
-  let delay = 1000;
-  
-  while (retries > 0) {
-    try {
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
-      
-      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-      const data = await response.json();
-      return data.candidates?.[0]?.content?.parts?.[0]?.text || "Maaf, AI tidak memberikan respons yang dapat dibaca.";
-    } catch (error) {
-      retries--;
-      if (retries === 0) return "Maaf, sistem AI sedang sibuk atau ada gangguan koneksi. Silakan coba beberapa saat lagi.";
-      await new Promise(res => setTimeout(res, delay));
-      delay *= 2;
-    }
-  }
-};
-
-/*
-// [VERSI FIX LOKAL - BUKA KOMENTAR DI BAWAH JIKA DIJALANKAN DI VS CODE / HOSTING SENDIRI]
-const fetchGeminiAILocal = async (prompt, systemInstruction) => {
   const apiKey = "AIzaSyAXOok0zLWHZmTyf_i70wJoKFsyl6r7YOE"; 
   const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
   
@@ -106,7 +59,6 @@ const fetchGeminiAILocal = async (prompt, systemInstruction) => {
     return "Gagal terhubung ke AI. Cek kuota API Key.";
   }
 };
-*/
 
 const App = () => {
   // --- CLOUD STATE MANAGEMENT ---
@@ -148,26 +100,12 @@ const App = () => {
   // ============================================================================
   useEffect(() => {
     const initAuth = async () => {
-      // [VERSI CANVAS - WAJIB AKTIF DI SINI AGAR PREVIEW BERJALAN]
-      try {
-        if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-          await signInWithCustomToken(auth, __initial_auth_token);
-        } else {
-          await signInAnonymously(auth);
-        }
-      } catch (error) {
-        console.error("Auth error:", error);
-      }
-
-      /*
-      // [VERSI FIX LOKAL - BUKA KOMENTAR DI BAWAH JIKA DIJALANKAN DI VS CODE / HOSTING SENDIRI]
       try {
         // Langsung login tanpa token internal Gemini
         await signInAnonymously(auth);
       } catch (error) {
         console.error("Auth error:", error);
       }
-      */
     };
     initAuth();
     const unsubscribe = onAuthStateChanged(auth, setUser);
