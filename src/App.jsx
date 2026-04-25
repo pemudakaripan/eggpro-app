@@ -83,25 +83,18 @@ const App = () => {
 
   // --- 1. AUTH & DATA SYNC ---
   useEffect(() => {
-    signInAnonymously(auth).catch(err => console.error(err));
-    const unsubscribe = onAuthStateChanged(auth, setUser);
-    return () => unsubscribe();
-  }, []);
-
-  useEffect(() => {
-    if (!user) return;
-    const unsubRecords = onSnapshot(collection(db, 'artifacts', appId, 'users', user.uid, 'records'), (snap) => {
-      setDailyRecords(snap.docs.map(d => ({ id: d.id, ...d.data() })));
-      setLoading(false);
-    });
-    const unsubInv = onSnapshot(collection(db, 'artifacts', appId, 'users', user.uid, 'inventory'), (snap) => {
-      setInventory(snap.docs.map(d => ({ id: d.id, ...d.data() })));
-    });
-    const unsubHealth = onSnapshot(collection(db, 'artifacts', appId, 'users', user.uid, 'health'), (snap) => {
-      setHealthLogs(snap.docs.map(d => ({ id: d.id, ...d.data() })));
-    });
-    return () => { unsubRecords(); unsubInv(); unsubHealth(); };
-  }, [user]);
+  const initAuth = async () => {
+    try {
+      // Langsung gunakan Anonymous Login (Menghapus __initial_auth_token)
+      await signInAnonymously(auth);
+    } catch (error) {
+      console.error("Auth error:", error);
+    }
+  };
+  initAuth();
+  const unsubscribe = onAuthStateChanged(auth, setUser);
+  return () => unsubscribe();
+}, []);
 
   // --- 2. LOGIKA PERHITUNGAN ---
   const stats = useMemo(() => {
